@@ -35,23 +35,23 @@ router.post("/generate-cipher", (req, res) => {
             return res.status(400).json({ error: "Invalid encryption type. Supported types: AES, RSA, DES, Caesar, Playfair." });
     }
 
-    // Construct the path to the Python executable
-    const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
+    // // Construct the path to the Python executable
+    // const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
 
-    console.log(`Python executable path: ${pythonPath}`);
+    // console.log(`Python executable path: ${pythonPath}`);
 
-    // Check if the Python executable exists
-    const fs = require("fs");
-    if (!fs.existsSync(pythonPath)) {
-        console.error(`Python executable not found at ${pythonPath}`);
-        return res.status(500).json({ error: "Python executable not found. Please check the environment." });
-    }
+    // // Check if the Python executable exists
+    // const fs = require("fs");
+    // if (!fs.existsSync(pythonPath)) {
+    //     console.error(`Python executable not found at ${pythonPath}`);
+    //     return res.status(500).json({ error: "Python executable not found. Please check the environment." });
+    // }
 
-    // Check if the script exists
-    if (!fs.existsSync(scriptPath)) {
-        console.error(`Script not found at ${scriptPath}`);
-        return res.status(500).json({ error: "Cipher script not found. Please check the environment." });
-    }
+    // // Check if the script exists
+    // if (!fs.existsSync(scriptPath)) {
+    //     console.error(`Script not found at ${scriptPath}`);
+    //     return res.status(500).json({ error: "Cipher script not found. Please check the environment." });
+    // }
 
     // Spawn a Python process to run the appropriate cipher script
     // const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
