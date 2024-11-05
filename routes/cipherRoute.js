@@ -29,7 +29,7 @@ router.post("/generate-cipher", (req, res) => {
             scriptPath = path.join(__dirname, "../scripts/caesar_cipher.py");
             break;
         case "Playfair":
-            scriptPath = path.join(__dirname, "../scripts/playfair_cipher.py");
+            scriptPath = path.join(__dirname, "../scripts/Playfair_cipher.py");
             break;
         default:
             return res.status(400).json({ error: "Invalid encryption type. Supported types: AES, RSA, DES, Caesar, Playfair." });
