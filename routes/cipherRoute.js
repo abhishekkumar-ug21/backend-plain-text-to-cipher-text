@@ -11,7 +11,8 @@ router.post("/generate-cipher", (req, res) => {
     if (!plainText || typeof plainText !== "string") {
         return res.status(400).json({ error: "Invalid input. Please provide a valid plainText." });
     }
-    console.log(plainText , encryptionType);
+    console.log(plainText, encryptionType);
+
     // Determine which script to use based on encryptionType
     let scriptPath;
     switch (encryptionType) {
@@ -24,26 +25,35 @@ router.post("/generate-cipher", (req, res) => {
         case "DES":
             scriptPath = path.join(__dirname, "../scripts/des_cipher.py");
             break;
-        case "Caesar": // Explicitly check for Caesar if needed
+        case "Caesar":
             scriptPath = path.join(__dirname, "../scripts/caesar_cipher.py");
             break;
-        case "Playfair": 
-            scriptPath = path.join(__dirname, "../scripts/Playfair_cipher.py");
+        case "Playfair":
+            scriptPath = path.join(__dirname, "../scripts/playfair_cipher.py");
             break;
         default:
-            // Default to Caesar Cipher if no valid encryption type is provided
-            scriptPath = path.join(__dirname, "../scripts/cipher_script.py");
-            break;
+            return res.status(400).json({ error: "Invalid encryption type. Supported types: AES, RSA, DES, Caesar, Playfair." });
+    }
+
+    // Construct the path to the Python executable
+    const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
+
+    // Check if the Python executable exists
+    const fs = require("fs");
+    if (!fs.existsSync(pythonPath)) {
+        console.error(`Python executable not found at ${pythonPath}`);
+        return res.status(500).json({ error: "Python executable not found. Please check the environment." });
+    }
+
+    // Check if the script exists
+    if (!fs.existsSync(scriptPath)) {
+        console.error(`Script not found at ${scriptPath}`);
+        return res.status(500).json({ error: "Cipher script not found. Please check the environment." });
     }
 
     // Spawn a Python process to run the appropriate cipher script
-
-    const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
     const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
 
-    // const pythonProcess = spawn("python3", [scriptPath, plainText]);
-    // console.log(pythonProcess);
-    console.log("pythonProcess");
     let cipherText = "";
 
     // Capture data from stdout
@@ -53,7 +63,7 @@ router.post("/generate-cipher", (req, res) => {
 
     // Capture data from stderr
     pythonProcess.stderr.on("data", (data) => {
-        console.error(`Python script error: ${data}`);
+        console.error(`Python script error: ${data.toString()}`);
     });
 
     // Handle process close
@@ -61,8 +71,14 @@ router.post("/generate-cipher", (req, res) => {
         if (code !== 0) {
             return res.status(500).json({ error: "An error occurred while processing the request." });
         }
-        console.log(cipherText);
+        console.log(`Cipher text generated: ${cipherText}`);
         res.json({ cipherText });
+    });
+
+    // Handle error in spawning the process
+    pythonProcess.on("error", (err) => {
+        console.error(`Failed to start subprocess: ${err}`);
+        return res.status(500).json({ error: "Failed to start the encryption process." });
     });
 });
 

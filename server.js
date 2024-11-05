@@ -6,17 +6,39 @@ require("dotenv").config();
 const cipherRoute = require("./routes/cipherRoute");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Use the environment variable for the frontend URL
-    // methods: ["GET", "POST"], // Allowed methods
-    // allowedHeaders: ["Content-Type"], // Allowed headers
-};
-
-app.use(cors(corsOptions)); // Enable CORS with options
-// app.use(cors())
+if (process.env.MODE=="pro") {
+    const corsOptions = {
+        origin: function (origin, callback) {
+            const allowedOrigins = [
+                process.env.FRONTEND_URL, //  frontend URL
+                process.env.FRONTEND_URL_1, // First frontend URL
+                process.env.FRONTEND_URL_2, // Second frontend URL
+                process.env.FRONTEND_URL_3, // Third frontend URL
+            ];
+    
+            // Allow requests with no origin (like mobile apps or Postman)
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true); // Accept the request
+            } else {
+                callback(new Error('Not allowed by CORS')); // Reject the request
+            }
+        },
+        // Uncomment the following lines if you want to specify methods and headers
+        // methods: ["GET", "POST"], // Allowed methods
+        // allowedHeaders: ["Content-Type"], // Allowed headers
+    };
+    
+    app.use(cors(corsOptions)); // Enable CORS with options
+    
+}
+if (process.env.MODE=="dev") {
+    app.use(cors())
+    
+}
 app.use(bodyParser.json());
+
 
 // Use the cipher route
 app.use("/api", cipherRoute);
