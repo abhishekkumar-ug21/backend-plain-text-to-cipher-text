@@ -38,6 +38,8 @@ router.post("/generate-cipher", (req, res) => {
     // Construct the path to the Python executable
     const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
 
+    console.log(`Python executable path: ${pythonPath}`);
+
     // Check if the Python executable exists
     const fs = require("fs");
     if (!fs.existsSync(pythonPath)) {
