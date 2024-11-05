@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const { spawn } = require("child_process");
+require("dotenv").config(); // Load environment variables
 
 router.post("/generate-cipher", (req, res) => {
     const { plainText, encryptionType } = req.body;
@@ -10,7 +11,7 @@ router.post("/generate-cipher", (req, res) => {
     if (!plainText || typeof plainText !== "string") {
         return res.status(400).json({ error: "Invalid input. Please provide a valid plainText." });
     }
-
+    console.log(plainText , encryptionType);
     // Determine which script to use based on encryptionType
     let scriptPath;
     switch (encryptionType) {
@@ -36,8 +37,13 @@ router.post("/generate-cipher", (req, res) => {
     }
 
     // Spawn a Python process to run the appropriate cipher script
-    const pythonProcess = spawn("python3", [scriptPath, plainText]);
 
+    const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
+    const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
+
+    // const pythonProcess = spawn("python3", [scriptPath, plainText]);
+    // console.log(pythonProcess);
+    console.log("pythonProcess");
     let cipherText = "";
 
     // Capture data from stdout
@@ -55,6 +61,7 @@ router.post("/generate-cipher", (req, res) => {
         if (code !== 0) {
             return res.status(500).json({ error: "An error occurred while processing the request." });
         }
+        console.log(cipherText);
         res.json({ cipherText });
     });
 });

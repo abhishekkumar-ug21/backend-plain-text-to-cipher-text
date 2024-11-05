@@ -14,8 +14,8 @@ const corsOptions = {
     // allowedHeaders: ["Content-Type"], // Allowed headers
 };
 
-app.use(cors(corsOptions)); // Enable CORS with options
-// app.use(cors())
+// app.use(cors(corsOptions)); // Enable CORS with options
+app.use(cors())
 app.use(bodyParser.json());
 
 // Use the cipher route
