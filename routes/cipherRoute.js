@@ -54,7 +54,8 @@ router.post("/generate-cipher", (req, res) => {
     }
 
     // Spawn a Python process to run the appropriate cipher script
-    const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
+    // const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
+    const pythonProcess = spawn("python3", [scriptPath, plainText]);
 
     let cipherText = "";
 

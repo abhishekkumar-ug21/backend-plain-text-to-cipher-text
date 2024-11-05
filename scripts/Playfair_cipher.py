@@ -1,10 +1,10 @@
 
 import os
 import sys
-from dotenv import load_dotenv
+# from dotenv import load_dotenv
 
 # Load environment variables from .env file
-load_dotenv()
+# load_dotenv()
 
 # Access the CIPHER_KEY variable
 keyword = os.getenv("CIPHER_KEY", "KEYWORD").upper()
