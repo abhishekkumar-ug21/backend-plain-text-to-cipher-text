@@ -5,13 +5,13 @@ const { spawn } = require("child_process");
 require("dotenv").config(); // Load environment variables
 
 router.post("/generate-cipher", (req, res) => {
-    const { plainText, encryptionType } = req.body;
-
+    const { plainText, encryptionType, key } = req.body;
+    // console.log("key is :",key);
     // Validate input
     if (!plainText || typeof plainText !== "string") {
         return res.status(400).json({ error: "Invalid input. Please provide a valid plainText." });
     }
-    console.log(plainText, encryptionType);
+    // console.log(plainText, encryptionType);
 
     // Determine which script to use based on encryptionType
     let scriptPath;
@@ -35,27 +35,8 @@ router.post("/generate-cipher", (req, res) => {
             return res.status(400).json({ error: "Invalid encryption type. Supported types: AES, RSA, DES, Caesar, Playfair." });
     }
 
-    // // Construct the path to the Python executable
-    // const pythonPath = path.join(__dirname, "../venv/bin/python3"); // Use venv's python3
-
-    // console.log(`Python executable path: ${pythonPath}`);
-
-    // // Check if the Python executable exists
-    // const fs = require("fs");
-    // if (!fs.existsSync(pythonPath)) {
-    //     console.error(`Python executable not found at ${pythonPath}`);
-    //     return res.status(500).json({ error: "Python executable not found. Please check the environment." });
-    // }
-
-    // // Check if the script exists
-    // if (!fs.existsSync(scriptPath)) {
-    //     console.error(`Script not found at ${scriptPath}`);
-    //     return res.status(500).json({ error: "Cipher script not found. Please check the environment." });
-    // }
-
-    // Spawn a Python process to run the appropriate cipher script
-    // const pythonProcess = spawn(pythonPath, [scriptPath, plainText]);
-    const pythonProcess = spawn("python3", [scriptPath, plainText]);
+ 
+    const pythonProcess = spawn("python3", [scriptPath, plainText, key]);
 
     let cipherText = "";
 
@@ -74,7 +55,7 @@ router.post("/generate-cipher", (req, res) => {
         if (code !== 0) {
             return res.status(500).json({ error: "An error occurred while processing the request." });
         }
-        console.log(`Cipher text generated: ${cipherText}`);
+        console.log(`Cipher text generated:\n ${cipherText}`);
         res.json({ cipherText });
     });
 
