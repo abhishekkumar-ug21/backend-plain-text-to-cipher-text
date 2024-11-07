@@ -7,7 +7,11 @@ import sys
 # load_dotenv()
 
 # Access the CIPHER_KEY variable
-keyword = os.getenv("CIPHER_KEY", "KEYWORD").upper()
+key = sys.argv[2]
+
+keyword = key.upper() if key else os.getenv("CIPHER_KEY", "KEYWORD").upper()
+
+print("key for encryption is:", keyword)
 
 # Function to create a 5x5 matrix for Playfair Cipher
 def create_matrix(key):
@@ -15,9 +19,9 @@ def create_matrix(key):
     key = "".join(sorted(set(key.replace("J", "I")), key=key.index))  # Remove duplicates, replace J with I
     matrix_string = key + "".join([char for char in alphabet if char not in key])
     matrix = [list(matrix_string[i:i + 5]) for i in range(0, 25, 5)]
-    # print("Playfair Matrix:")
-    # for row in matrix:
-    #     print(row)
+    print("Playfair Matrix:\n")
+    for row in matrix:
+        print(row)
     return matrix
 
 # Function to format the plaintext for encryption
@@ -66,12 +70,14 @@ def encrypt(plaintext):
 if __name__ == "__main__":
     if len(sys.argv) > 1:
         plaintext = sys.argv[1]
+        # key = sys.argv[2]
+        # print("\n in python key is :",key)
     else:
         plaintext = input("Enter plaintext to encrypt: ")
     try:
         cipher_text = encrypt(plaintext)
-        # print("Cipher text:", cipher_text)
-        print(cipher_text)
+        print("\nCipher text:", cipher_text)
+        # print(cipher_text)
     except ValueError as ve:
         print(f"Error: {ve}")
         sys.exit(1)
