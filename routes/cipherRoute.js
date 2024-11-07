@@ -6,12 +6,12 @@ require("dotenv").config(); // Load environment variables
 
 router.post("/generate-cipher", (req, res) => {
     const { plainText, encryptionType, key } = req.body;
-    // console.log("key is :",key);
+    console.log("key is :",key);
     // Validate input
     if (!plainText || typeof plainText !== "string") {
         return res.status(400).json({ error: "Invalid input. Please provide a valid plainText." });
     }
-    // console.log(plainText, encryptionType);
+    console.log(plainText, encryptionType);
 
     // Determine which script to use based on encryptionType
     let scriptPath;
@@ -30,6 +30,9 @@ router.post("/generate-cipher", (req, res) => {
             break;
         case "Playfair":
             scriptPath = path.join(__dirname, "../scripts/Playfair_cipher.py");
+            break;
+        case "Vigenere":
+            scriptPath = path.join(__dirname, "../scripts/vigenere_cipher.py");
             break;
         default:
             return res.status(400).json({ error: "Invalid encryption type. Supported types: AES, RSA, DES, Caesar, Playfair." });
