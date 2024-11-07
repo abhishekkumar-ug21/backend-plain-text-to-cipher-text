@@ -2,8 +2,9 @@ import sys
 
 def vigenere_encrypt(plain_text, key):
     cipher_text = []
-    key = key.upper()
-    plain_text = plain_text.upper()
+    key = key.upper()  # Ensure the key is in uppercase
+    plain_text = plain_text.upper()  # Convert plain text to uppercase
+    
     key_len = len(key)
     key_index = 0
     
@@ -22,9 +23,17 @@ def vigenere_encrypt(plain_text, key):
 
 if __name__ == "__main__":
     plain_text = sys.argv[1]
-    key = sys.argv[2] if len(sys.argv) > 2 else 'ABHI'  # Use 'ABHI' as default if no key is provided
-    print("key for encryption is:",key.upper())
+    key = sys.argv[2]
+    
+    # Check if the key is empty and set default if true
+    if key == "":
+        key = "BU"
+    
+    # Ensure the key is uppercase and print the key used for encryption
+    print("Key for encryption is:", key.upper())
+    
     # Call the Vigenère cipher encryption function
     cipher_text = vigenere_encrypt(plain_text, key)
     
+    # Output the cipher text
     print("\nCipher text:", cipher_text)
