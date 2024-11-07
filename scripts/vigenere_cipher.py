@@ -27,7 +27,7 @@ if __name__ == "__main__":
     
     # Check if the key is empty and set default if true
     if key == "":
-        key = "BU"
+        key = "ABHI"
     
     # Ensure the key is uppercase and print the key used for encryption
     print("Key for encryption is:", key.upper())
