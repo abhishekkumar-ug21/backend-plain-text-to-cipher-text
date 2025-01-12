@@ -16,6 +16,7 @@ if (process.env.MODE=="pro") {
                 process.env.FRONTEND_URL_1, // First frontend URL
                 process.env.FRONTEND_URL_2, // Second frontend URL
                 process.env.FRONTEND_URL_3, // Third frontend URL
+                process.env.LOCAL_IP, // Third frontend URL
             ];
     
             // Allow requests with no origin (like mobile apps or Postman)
